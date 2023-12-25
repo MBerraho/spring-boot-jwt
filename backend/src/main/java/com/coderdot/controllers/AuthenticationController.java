@@ -6,6 +6,7 @@ import com.coderdot.dto.RegisterUserDto;
 import com.coderdot.models.User;
 import com.coderdot.services.AuthenticationService;
 import com.coderdot.services.JwtService;
+import jakarta.annotation.PostConstruct;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,11 @@ public class AuthenticationController {
     public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
+    }
+
+    @PostConstruct
+    public void initUserRole() {
+        authenticationService.initUserRole();
     }
 
     @PostMapping("/signup")

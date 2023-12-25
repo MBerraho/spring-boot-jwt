@@ -1,5 +1,6 @@
 package com.coderdot.services;
 
+import com.coderdot.models.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -10,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,8 +39,13 @@ public class JwtService {
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        if (userDetails instanceof User) {
+            User user = (User) userDetails;
+            extraClaims.put("roles", user.getRoles().stream().map(Enum::name).collect(Collectors.toList()));
+        }
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
+
 
     public long getExpirationTime() {
         return jwtExpiration;
