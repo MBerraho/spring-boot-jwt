@@ -1,0 +1,10 @@
+<!-- app.component.html -->
+<div>
+  <h1>Angular Authentication</h1>
+  <nav>
+    <a routerLink="/login" routerLinkActive="active">Login</a>
+    <a routerLink="/signup" routerLinkActive="active">Signup</a>
+    <a *ngIf="isLoggedIn()" (click)="logout()">Logout</a>
+  </nav>
+</div>
+<router-outlet></router-outlet>
