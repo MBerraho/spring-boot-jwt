@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { AuthService } from './services/auth.service';
+import { Subscription } from 'rxjs';
+import { StorageService } from './_services/storage.service';
+import { AuthService } from './_services/auth.service';
+import { EventBusService } from './_shared/event-bus.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -8,14 +11,41 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(private authService: AuthService, private router: Router) {}
+  private roles: string[] = [];
+  isLoggedIn = false;
+  showAdminBoard = false;
+  showModeratorBoard = false;
+  username?: string;
 
-  isLoggedIn(): boolean {
-    return !!this.authService.getAuthToken();
+  eventBusSub?: Subscription;
+
+  constructor(
+    private storageService: StorageService,
+    private authService: AuthService,
+    private eventBusService: EventBusService,
+    private router: Router
+  ) { }
+
+  ngOnInit(): void {
+    this.isLoggedIn = this.storageService.isLoggedIn();
+
+    if (this.isLoggedIn) {
+      const user = this.storageService.getUser();
+      this.roles = user.roles;
+
+      this.showAdminBoard = this.roles.includes('ROLE_ADMIN');
+      this.showModeratorBoard = this.roles.includes('ROLE_MODERATOR');
+
+      this.username = user.username;
+    }
+
+    this.eventBusSub = this.eventBusService.on('logout', () => {
+      this.logout();
+    });
   }
 
   logout(): void {
-    this.authService.removeAuthToken();
-    this.router.navigate(['/login']);
+    this.authService.clearAuthentication();
+    this.storageService.clean();
   }
 }
