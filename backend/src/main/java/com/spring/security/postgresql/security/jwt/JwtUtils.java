@@ -1,6 +1,7 @@
 package com.spring.security.postgresql.security.jwt;
 
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 
 import com.spring.security.postgresql.security.services.UserDetailsImpl;
@@ -18,8 +19,8 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUtils {
   private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-  @Value("${my.app.jwtSecret}")
-  private String jwtSecret;
+  byte[] keyBytes = Keys.secretKeyFor(SignatureAlgorithm.HS256).getEncoded();
+  private String jwtSecret = Base64.getEncoder().encodeToString(keyBytes);
 
   @Value("${my.app.jwtExpirationMs}")
   private int jwtExpirationMs;

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../_services/user.service';
 import { Role, User } from '../models/user';
+import { StorageService } from '../_services/storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-board-admin',
@@ -9,15 +11,18 @@ import { Role, User } from '../models/user';
 })
 export class BoardAdminComponent implements OnInit {
 
-
   users: User[] = [];
+  newUser!: User;
+  currentUser!: User;
   roles: Role[] = [];
   errorMessage: string = '';
   selectedUser: User | null = null;
+  roleAdmin: Role[] = [new Role("ROLE_ADMIN")];
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private storageService: StorageService, private router: Router) { }
 
   ngOnInit(): void {
+    this.currentUser = this.storageService.getUser();
     this.userService.getAllUsers().subscribe({
       next: (data: User[]) => {
         this.users = data;
@@ -88,4 +93,9 @@ export class BoardAdminComponent implements OnInit {
   cancel() {
     this.selectedUser = null;
   }
+
+  addNewUser() {
+    this.router.navigateByUrl('/new-user');
+  }
+  
 }

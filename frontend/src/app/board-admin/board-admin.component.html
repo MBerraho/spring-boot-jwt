@@ -8,6 +8,9 @@
         <th scope="col">Role</th>
         <th scope="col"></th>
         <th scope="col"></th>
+        <th scope="col">
+          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addNewUserPopup">ADD</button>
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -16,45 +19,70 @@
         <td>{{ user.username }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.roles[0].name }}</td>
-        <td><button class="btn btn-warning" (click)="update(user)">UPDATE</button></td>
-        <td><button class="btn btn-danger" (click)="delete(user)">DELELTE</button></td>
+        <td>
+          <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#popupEditUser" (click)="update(user)">UPDATE</button>
+        </td>
+        <td>
+          <button *ngIf="user.id !== currentUser.id" class="btn btn-danger" (click)="delete(user)">DELETE</button>
+        </td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<div *ngIf="errorMessage" class="alert alert-danger">
-  {{ errorMessage }}
-</div>
-
-<!-- Pop-up form for updating user -->
-<div *ngIf="selectedUser" class="popup-form">
-  <div class="form-content card p-4">
-    <span class="close" (click)="cancel()">&times;</span>
-    <h2 class="mb-4">Edit User</h2>
-    <form (ngSubmit)="save(selectedUser)">
-      <div class="form-group">
-        <label>ID: {{ selectedUser.id }}</label>
+<!-- Edit User PopUp -->
+<div class="modal fade" id="popupEditUser" tabindex="-1" role="dialog" aria-labelledby="popupEditUserLabel" aria-hidden="true" *ngIf="selectedUser">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="popupEditUserLabel">Edit User</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span class="close" (click)="cancel()">&times;</span>
+        </button>
       </div>
-      <div class="form-group">
-        <label>Username: <input [(ngModel)]="selectedUser.username" name="username" class="form-control" required></label>
+      <div class="modal-body">
+        <form (ngSubmit)="save(selectedUser)">
+          <div class="form-group">
+            <label>ID: {{ selectedUser.id }}</label>
+          </div>
+          <div class="form-group">
+            <label>Username: <input [(ngModel)]="selectedUser.username" name="username" class="form-control" required></label>
+          </div>
+          <div class="form-group">
+            <label>Email: <input [(ngModel)]="selectedUser.email" name="email" class="form-control" required></label>
+          </div>
+          <div class="form-group">
+            <label>Role:
+              <select class="form-control" [(ngModel)]="selectedUser.roles[0].name" name="role" required>
+                <option *ngFor="let role of roles" [value]="role.name">{{ role.name }}</option>
+              </select>
+            </label>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()" style="margin-left: 20px;">Cancel</button>
+          </div>
+        </form>
       </div>
-      <div class="form-group">
-        <label>Email: <input [(ngModel)]="selectedUser.email" name="email" class="form-control" required></label>
-      </div>
-      <div class="form-group">
-        <label>Role:
-          <select class="form-control" [(ngModel)]="selectedUser.roles[0].name" name="role" required>
-            <option *ngFor="let role of roles" [value]="role.name">{{ role.name }}</option>
-          </select>
-        </label>
-      </div>
-      <!-- Add other fields as needed -->
-
-      <div class="form-group">
-        <button type="submit" class="btn btn-primary">Save</button>
-        <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
-      </div>
-    </form>
+    </div>
   </div>
 </div>
+
+
+<!-- Add User PopUp -->
+<div class="modal fade" id="addNewUserPopup" tabindex="-1" role="dialog" aria-labelledby="addNewUserPopupLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addNewUserPopupLabel">Add User</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span class="close" (click)="cancel()">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-add-new-user></app-add-new-user>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Role, User } from '../models/user';
 
 const API_URL = 'http://localhost:8089/api/test/';
@@ -9,8 +9,7 @@ const API_URL = 'http://localhost:8089/api/test/';
   providedIn: 'root',
 })
 export class UserService {
-
-
+  private currentUser: User | undefined;
   constructor(private http: HttpClient) { }
 
   private addTokenToHeaders(): HttpHeaders {
