@@ -25,6 +25,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AddNewUserComponent } from './add-new-user/add-new-user.component';
+import { SidebarComponent } from './home/sidebar/sidebar.component';
+import { TasksComponent } from './home/tasks/tasks.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { AddNewUserComponent } from './add-new-user/add-new-user.component';
     BoardAdminComponent,
     BoardModeratorComponent,
     BoardUserComponent,
-    AddNewUserComponent
+    AddNewUserComponent,
+    SidebarComponent,
+    TasksComponent,
   ],
   imports: [
     BrowserModule,

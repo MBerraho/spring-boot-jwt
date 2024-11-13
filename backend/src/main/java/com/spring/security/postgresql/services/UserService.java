@@ -9,6 +9,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -52,5 +54,12 @@ public class UserService {
         User userToDelete = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
         userRepository.delete(userToDelete);
+    }
+
+    public User fetchCurrentUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = authentication.getName();
+        return userRepository.findByUsername(currentUserName)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with name: " + currentUserName));
     }
 }
